@@ -237,6 +237,33 @@ int deleteFirst(headNode* h)
  */
 int deleteNode(headNode* h, int key) {
 
+	listNode* trail = NULL; // 삭제할 노드의 선행 노드를 가리키는 포인터
+	listNode* x = (h->first); // 삭제하고자 하는 노드를 가리키는 포인터
+
+	if ((x->key) == key) // 첫번째 노드를 삭제해야하면, 
+	{
+		(h->first) = (h->first)->link;
+		return 0;
+	}
+
+	while ((x->key) != key) // 삭제하고자 하는 key값을 찾을때까지
+	{
+		trail = x; //trail과 x는 함께 앞으로 한칸씩 전진
+		x = x->link;
+		if (trail->link == NULL) // 삭제하고자 하는 key값이 없다면 없다고 알려주기
+		{
+			printf("There is no data you are looking for!\n");
+			return 0;
+		}
+	}
+
+	if (x->link == NULL) // 마지막 노드가 삭제되는 상황이면
+		trail->link = NULL;
+	else
+		trail->link = x->link; // 노드 삭제
+
+	free(x); // 삭제될 메모리 공간 해제
+
 	return 0;
 
 }
@@ -244,7 +271,20 @@ int deleteNode(headNode* h, int key) {
 /**
  * list의 마지막 노드 삭제
  */
-int deleteLast(headNode* h) {
+int deleteLast(headNode* h)
+{
+	listNode* trail = NULL; // 삭제할 노드의 선행 노드를 가리키는 포인터
+	listNode* x = (h->first); // 삭제하고자 하는 노드를 가리키는 포인터
+
+	while (x->link != NULL) // list의 마지막에 도달할때까지
+	{
+		trail = x; // trail과 x를 함께 앞으로 전진
+		x = x->link;
+	}
+
+	trail->link = NULL;
+
+	free(x); // 삭제될 메모리 공간 해제
 
 	return 0;
 }
@@ -254,6 +294,25 @@ int deleteLast(headNode* h) {
  * 리스트의 링크를 역순으로 재 배치
  */
 int invertList(headNode* h) {
+
+	listNode* lead = (h->first); // 삭제하고자 하는 노드를 가리키는 포인터
+	listNode* trail = NULL; // 삭제할 노드의 선행 노드의 선행노드를 가리키는 포인터
+	listNode* middle = NULL; // 삭제할 노드의 선행 노드를 가리키는 포인터
+
+	if (h->first == NULL) // 리스트가 비어있다면 비어있다고 알려주기
+	{
+		printf("linked-list is empty!\n");
+		return 0;
+	}
+
+	while (lead != NULL) // lead포인터가 아무것도 가리키지 않을때까지
+	{
+		trail = middle; // trail 포인터를 middle로 
+		middle = lead;  // middle을 lead로 
+		lead = lead->link; // lead는 한칸 앞으로
+		middle->link = trail; // middle은 한칸 앞 노드를 가리키게함
+	}
+	h->first = middle; //middle이 가리키고 있는 노드를 첫번째 노드로 설정해주기
 
 	return 0;
 }
