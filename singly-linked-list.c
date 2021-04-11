@@ -196,10 +196,19 @@ int insertNode(headNode* h, int key)
 	}
 }
 
-/**
- * list에 key에 대한 노드하나를 추가
- */
 int insertLast(headNode* h, int key) { // list의 마지막에 노드 삽입
+
+	listNode* node = (listNode*)malloc(sizeof(listNode)); // 동적할당 받기
+	node->key = key; // 데이터필드에 key값 넣기
+	listNode* n = h->first;
+
+	while (n->link != NULL) // list의 마지막칸에 도달할때까지 반복문 돌리기
+	{
+		n = n->link;
+	}
+
+	n->link = node;
+	node->link = NULL; // node가 list의 마지막이 됨
 
 	return 0;
 }
@@ -208,8 +217,16 @@ int insertLast(headNode* h, int key) { // list의 마지막에 노드 삽입
 /**
  * list의 첫번째 노드 삭제
  */
-int deleteFirst(headNode* h) {
+int deleteFirst(headNode* h)
+{
+	listNode* node = h->first;
 
+	if (h->first == NULL) // list가 비어있다면, 비어있다고 알려주기
+		printf("Node does not exist\n");
+	else
+		(h->first) = (node)->link; // 첫번째 노드 삭제
+
+	free(node); // 삭제된 메모리 공간 해제
 
 	return 0;
 }
