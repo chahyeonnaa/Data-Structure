@@ -152,9 +152,48 @@ int insertFirst(headNode* h, int key) { // 가장 앞부분에 새로운 노드 
 }
 
 /* 리스트를 검색하여, 입력받은 key보다 큰값이 나오는 노드 바로 앞에 삽입 */
-int insertNode(headNode* h, int key) {
+int insertNode(headNode* h, int key)
+{
+	listNode* node = (listNode*)malloc(sizeof(listNode)); // 동적할당 받기
+	(node->key) = key; // 삽입할 노드 만들기
 
-	return 0;
+	listNode* trail = NULL; // listNode 구조체를 가리키는 구조체 포인터 trail
+	listNode* x = (h->first); // listNode 구조체를 가리키는 구조체 포인터 x
+
+	if (h->first == NULL) // 공백 list라면, list의 처음에 노드가 삽입되어야함. 
+	{
+		node->link = h->first;
+		h->first = node;
+		return 0;
+	}
+	// 공백 list가 아니면,
+	else
+	{
+
+		if ((x->key) > key) // 첫번째에 바로 추가되어야하는 상황이라면( 값이 가장 작다면)
+		{
+			node->link = h->first; // 링크필드가 first가 가리키고 있던 곳을 가리키게함.
+			h->first = node;
+			return 0;
+		}
+
+		while ((x->key) < key) // 넣고자 하는 key값과 x의 key값을 비교
+		{
+			trail = x; // trail포인터와 x포인터가 함께 한칸씩 전진
+			x = x->link;
+			if (trail->link == NULL) // 제일 마지막에 추가되는 상황이라면,
+			{
+				trail->link = node;
+				node->link = NULL;
+				return 0;
+			}
+		}
+
+		node->link = trail->link; // 반복문이 끝나면, 노드를 해당 위치에 삽입
+		trail->link = node;
+
+		return 0;
+	}
 }
 
 /**
