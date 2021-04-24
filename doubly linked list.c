@@ -231,7 +231,15 @@ int deleteLast(headNode* h) {
  * list 처음에 key에 대한 노드하나를 추가
  */
 int insertFirst(headNode* h, int key) {
+    	
+    listNode* node = (listNode*)malloc(sizeof(listNode)); // 동적할당 받기
+	node->key = key; // 데이터필드에 key값 넣기
 
+	node->rlink = h->first; // node를 list의 첫번째 노드로 만들기
+	h->first = node;
+	node->llink = h->first;
+
+	return 0;
 
 }
 
@@ -239,7 +247,20 @@ int insertFirst(headNode* h, int key) {
  * list의 첫번째 노드 삭제
  */
 int deleteFirst(headNode* h) {
+    
+    listNode* node = h->first;
 
+	if (h->first == NULL) // list가 비어있다면, 비어있다고 알려주기
+		printf("Node does not exist\n");
+	else
+	{
+		(h->first) = (node)->rlink; // 첫번째 노드 삭제_ 첫번째 노드를 node->rlink가 가리키는 값으로 설정
+		node->llink = h->first; // llink와 h->first 연결
+	}
+
+	free(node); // 삭제하고자 하는 메모리 공간 해제
+
+	return 0;
 
 }
 
@@ -249,7 +270,27 @@ int deleteFirst(headNode* h) {
  * 리스트의 링크를 역순으로 재 배치
  */
 int invertList(headNode* h) {
+    
+    listNode* lead = (h->first); // 삭제하고자 하는 노드를 가리키는 포인터
+	listNode* trail = NULL; // 삭제할 노드의 "선행 노드의 선행노드"를 가리키는 포인터
+	listNode* middle = NULL; // 삭제할 노드의 선행 노드를 가리키는 포인터
 
+	if (h->first == NULL) // 리스트가 비어있다면 비어있다고 알려주기
+	{
+		printf("linked-list is empty!\n");
+		return 0;
+	}
+
+	while (lead != NULL) // lead포인터가 아무것도 가리키지 않을때까지
+	{
+		trail = middle; // trail 포인터를 middle로 
+		middle = lead;  // middle을 lead로 
+		lead = lead->rlink; // lead는 한칸 앞으로
+		middle->rlink = trail; // middle은 한칸 앞 노드를 가리키게함
+	}
+	h->first = middle; //middle이 가리키고 있는 노드를 첫번째 노드로 설정해주기
+
+	return 0;
 
 }
 
