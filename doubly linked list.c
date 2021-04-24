@@ -298,6 +298,53 @@ int invertList(headNode* h) {
 
 /* 리스트를 검색하여, 입력받은 key보다 큰값이 나오는 노드 바로 앞에 삽입 */
 int insertNode(headNode* h, int key) {
+    
+    listNode* node = (listNode*)malloc(sizeof(listNode)); // 동적할당 받기
+	(node->key) = key; // 삽입할 노드 만들기
+
+	listNode* trail = NULL; // listNode 구조체를 가리키는 구조체 포인터 trail
+	listNode* x = (h->first); // listNode 구조체를 가리키는 구조체 포인터 x
+
+	if (h->first == NULL) // 공백 list라면, list의 처음에 노드가 삽입되어야함. 
+	{
+		node->rlink = h->first; 
+		h->first = node;
+		node->llink = h->first;
+		return 0;
+	}
+	// 공백 list가 아니면,
+	else
+	{
+
+		if ((x->key) > key) // 첫번째에 바로 추가되어야하는 상황이라면( 값이 가장 작다면)
+		{
+			node->rlink = h->first; // node->rlink가 first가 가리키고 있던 곳을 가리키게함.
+			h->first = node;
+			node->llink = h->first;
+			return 0;
+		}
+
+		while ((x->key) < key) // 넣고자 하는 key값과 x의 key값을 비교
+		{
+			trail = x; // trail포인터와 x포인터가 함께 한칸씩 전진
+			x = x->rlink;
+			if (trail->rlink == NULL) // 제일 마지막에 추가되는 상황이라면,
+			{
+				trail->rlink = node;
+				node->llink = trail->rlink;
+				node->rlink = NULL;
+				return 0;
+			}
+		}
+
+		node->rlink = trail->rlink; // 반복문이 끝나면, 노드를 해당 위치에 삽입
+		trail->rlink = node;        // node와 trail이 가리키는 노드를 연결
+		node->llink = trail->rlink;
+
+		return 0;
+	}
+
+	return 0;
 
 
 }
@@ -308,7 +355,42 @@ int insertNode(headNode* h, int key) {
  */
 int deleteNode(headNode* h, int key) {
 
+
+	listNode* trail = NULL; // 삭제할 노드의 선행 노드를 가리키는 포인터
+	listNode* x = (h->first); // 삭제하고자 하는 노드를 가리키는 포인터
+
+	if ((x->key) == key) // 첫번째 노드를 삭제해야하면, 
+	{
+		(h->first) = (h->first)->rlink; // h->first가 가리키는 노드를 (h->first)의 rlink가 가리키는 노드로 바꿔줌.
+		return 0;
+	}
+
+	while ((x->key) != key) // 삭제하고자 하는 key값을 찾을때까지
+	{
+		trail = x; //trail과 x는 함께 앞으로 한칸씩 전진
+		x = x->rlink;
+		if (trail->rlink == NULL) // 삭제하고자 하는 key값이 없다면 없다고 알려주기
+		{
+			printf("There is no data you are looking for!\n");
+			return 0;
+		}
+	}
+
+	if (x->rlink == NULL) // 마지막 노드가 삭제되는 상황이면
+		trail->rlink = NULL; // 삭제하고자 하는 노드 무시
+	else
+	{
+		trail->rlink = x->rlink; // 노드 삭제
+		x->rlink->llink = trail->rlink;
+	}
+
+	free(x); // 삭제될 메모리 공간 해제
+
+
+	return 1;
+
 }
+
 
 
 
