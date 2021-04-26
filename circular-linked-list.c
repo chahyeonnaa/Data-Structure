@@ -193,6 +193,26 @@ int insertLast(listNode* h, int key) {
  */
 int deleteLast(listNode* h) {
 
+    listNode* trail = NULL; // 삭제할 노드의 선행 노드를 가리키는 포인터
+	listNode* x = h; // 삭제하고자 하는 노드를 가리키는 포인터
+
+	if ((h->llink == h) && (h->rlink == h)) // 공백리스트이면, 비어있다는 메세지 출력
+		printf("Node does not exist\n");
+	else
+	{
+		while (x->rlink!=h)// list의 마지막에 도달할때까지
+		{
+			trail = x; // trail과 x를 함께 앞으로 전진
+			x = x->rlink;
+		}
+		trail->rlink = h;// 삭제하고자 하는 노드를 무시하고 trail과 head를 연결시켜줌
+		h->llink = trail;
+		
+		free(x); // 삭제될 메모리 공간 해제
+	}
+
+	return 1;
+
 
 	return 1;
 }
@@ -239,8 +259,17 @@ int insertFirst(listNode* h, int key) {
  * list의 첫번째 노드 삭제
  */
 int deleteFirst(listNode* h) {
+    
+    listNode* n = h;
 
-
+	if ((h->llink == h) && (h->rlink == h)) // list가 비어있으면 비어있다고 알려주기
+		printf("Node does not exist\n");
+	else
+	{
+		h->rlink = h->rlink->rlink; // head를 원래 가리키고 있던 다음 노드를 가리키게 해줌.
+		h->rlink->rlink->rlink->llink = h; // 삭제하고자 하는 해당 노드의 다음 노드와 head를 연결
+	}
+    // 메모리 해제 해야하는데 모르겠다
 	return 1;
 
 }
@@ -333,7 +362,45 @@ int insertNode(listNode* h, int key) {
  */
 int deleteNode(listNode* h, int key) {
 
-	return 0;
+
+	listNode* trail = NULL; // 삭제할 노드의 선행 노드를 가리키는 포인터
+	listNode* x = h; // 삭제하고자 하는 노드를 가리키는 포인터
+
+	if ((x->key) == key) // 첫번째 노드를 삭제해야하면, 
+	{
+		h->rlink = h->rlink->rlink; // head를 원래 가리키고 있던 다음 노드를 가리키게 해줌.
+		h->rlink->rlink->rlink->llink = h; // 삭제하고자 하는 해당 노드의 다음 노드와 head를 연결
+		return 0;
+	}
+
+	while ((x->key) != key) // 삭제하고자 하는 key값을 찾을때까지
+	{
+		trail = x; //trail과 x는 함께 앞으로 한칸씩 전진
+		x = x->rlink;
+		if (trail->rlink == h) // 삭제하고자 하는 key값이 없다면 없다고 알려주기
+		{
+			printf("There is no data you are looking for!\n");
+			return 0;
+		}
+	}
+
+	if (x->rlink == h) // 마지막 노드가 삭제되는 상황이면
+	{
+		trail->rlink = h;// 삭제하고자 하는 노드를 무시하고 trail과 head를 연결시켜줌
+		h->llink = trail;
+
+		free(x); // 삭제될 메모리 공간 해제
+		return 0;
+	}
+	else
+	{
+		trail->rlink = x->rlink; // 노드 삭제
+		x->rlink->llink = trail;
+
+		free(x); // 삭제될 메모리 공간 해제
+		return 0;
+	}
+
 }
 
 
