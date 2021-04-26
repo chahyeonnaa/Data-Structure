@@ -43,6 +43,7 @@ int main()
 	listNode* headnode = NULL;
 
 	do {
+        printf("                     [2020039009 Chahyeona]                     \n");
 		printf("----------------------------------------------------------------\n");
 		printf("                  Doubly Circular Linked List                   \n");
 		printf("----------------------------------------------------------------\n");
@@ -122,6 +123,17 @@ int initialize(listNode** h) {
 
 /* 메모리 해제 */
 int freeList(listNode* h) {
+
+    listNode* p = h; // head노드를 가리키는 포인터
+
+	listNode* prev = NULL;
+
+	while ((h->llink != h) && (h->rlink != h)) { // 연결리스트가 비어있지않으면, 
+		prev = p; // prev가 p를 가리키게함.
+		p = p->rlink; //p는 p의 rlink가 가리키던 곳을 가리키게함. 
+		free(prev); // prev 가 가리키는 메모리 공간 해제
+	}
+	free(h);
 
 	return 0;
 }
@@ -212,9 +224,6 @@ int deleteLast(listNode* h) {
 	}
 
 	return 1;
-
-
-	return 1;
 }
 
 
@@ -260,7 +269,7 @@ int insertFirst(listNode* h, int key) {
  */
 int deleteFirst(listNode* h) {
     
-    listNode* n = h;
+    listNode* n = h->rlink;
 
 	if ((h->llink == h) && (h->rlink == h)) // list가 비어있으면 비어있다고 알려주기
 		printf("Node does not exist\n");
@@ -269,7 +278,8 @@ int deleteFirst(listNode* h) {
 		h->rlink = h->rlink->rlink; // head를 원래 가리키고 있던 다음 노드를 가리키게 해줌.
 		h->rlink->rlink->rlink->llink = h; // 삭제하고자 하는 해당 노드의 다음 노드와 head를 연결
 	}
-    // 메모리 해제 해야하는데 모르겠다
+
+    free(n); // 메모리 해제
 	return 1;
 
 }
@@ -279,9 +289,32 @@ int deleteFirst(listNode* h) {
  * 리스트의 링크를 역순으로 재 배치
  */
 int invertList(listNode* h) {
+    
+    listNode* lead = h; // head 노드를 가리키는 포인터
+	listNode* x = h->rlink; // head노드의 rlink가 가리키는 곳을 가리키는 포인터
+	listNode* trail; 
 
+	if ((h->llink == h) && (h->rlink == h)) // list가 비어있으면 비어있다고 알려주기
+	{
+		printf("linked-list is empty!\n");
+		return 0;
+	}
+
+	while (x != h) // list의 끝에 도달할 때 까지
+	{
+		trail = lead; // trail, lead, x 를 한칸씩 앞으로 전진
+		lead = x; 
+		x= x->rlink; 
+		lead->rlink = trail; // 순서 반전시키기
+		lead->llink = x; // llink의 순서도 반전시키기
+	}
+
+	h->llink = h->rlink; // head노드와 가장 마지막 노드를 연결  
+	h = h->rlink; // head 노드를 가장 첫 노드와 연결
+	x->rlink = lead; // 가장 마지막에 있는 노드도 순서 반전시키기
 
 	return 0;
+
 }
 
 
