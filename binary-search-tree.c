@@ -206,6 +206,49 @@ int insert(Node* head, int key) // 데이터 삽입
 
 int deleteLeafNode(Node* head, int key)
 {
+    Node* parent = NULL; // 삭제하고자 하는 노드의 부모 노드를 가리킬 포인터
+	Node* child = head->left; // 루트노드를 가리키는 포인터
+	while (1)
+	{
+		parent = child;
+		if (child->key > key) // 찾고자 하는 노드가 해당 위치의 노드보다 작으면
+		{
+			child = child->left; // child값을 재정의하여 반복문을 다시 실행_ 왼쪽 탐색
+		}
+		else if (child->key < key) // 찾고자 하는 노드가 해당 위치의 노드보다 크면
+		{
+			child = child->right; // child값을 재정의하여 반복문을 다시 실행_ 오른쪽 탐색
+		}
+
+		if (child->key == key || (child->right == NULL && child->left == NULL)) 
+			break; // 값을 찾았거나, 찾고자 하는 값이 없어서 트리의 끝에 도달했을 경우 반복문 탈출
+	}
+
+	if (child->key != key && child->right == NULL && child->left == NULL) // 키 값이 일치하지 않고, 트리의 끝에 도달했으면
+	{
+		printf("the node [%d] is not exist", key); // 키 값이 존재하지 않는다는 문구 출력
+		return 1;
+	}
+	if (child->left != NULL || child->right != NULL) // 키 값을 찾았지만, 리프노드가 아니면
+	{
+		printf("the node [%d] is not leaf", key); // 리프노드가 아니라고 알려줌
+		return 1;
+	}
+	if (child->key == key) // 키 값을 찾았고, left와 right값이 NULL일때(리프노드 일때)
+	{
+		if (parent->key < child->key) // 부모 데이터보다 큰 경우
+		{
+			parent->right = NULL; // 오른쪽에 있는 노드를 버림
+			free(child);
+			return 1;
+		}
+		else // 부모 데이터보다 작은 경우
+		{
+			parent->left = NULL; // 왼쪽에 있는 노드를 버림
+			free(child);
+			return 1;
+		}
+	}
 	
 
 }
