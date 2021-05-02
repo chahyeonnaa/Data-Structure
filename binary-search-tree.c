@@ -210,13 +210,32 @@ int deleteLeafNode(Node* head, int key)
 
 }
 
-Node* searchRecursive(Node* ptr, int key)
+Node* searchRecursive(Node* ptr, int key) // 반복적 탐색방법
 {
+    if (!ptr) // 일치하는 값이 없는 경우 널값을 반환
+		return NULL;
+	if (key == ptr->key) // 일치하는 값을 찾았을 경우, 해당 노드에 대한 포인터를 반환
+		return ptr;
+	if (key < ptr->key) // 키 값을 찾아가는 과정_ 키값이 해당 위치의 데이터값보다 작으면
+		return searchRecursive(ptr->left, key); // 해당 위치를 인자로하여 함수를 새로 호출_왼쪽 탐색
+	else //키값이 해당 위치의 데이터값보다 크면
+		return searchRecursive(ptr->right, key); // 해당 위치를 인자로하여 함수를 새로 호출_오른쪽 탐색
 
 }
 
-Node* searchIterative(Node* head, int key)
+Node* searchIterative(Node* head, int key) // iterative 탐색 방법
 {
+    Node* tree = head->left; // 헤드가 가리키는 값(루트노드)을 가리키는 포인터
+	while (tree) // tree가 널값을 가지는지 체크
+	{
+		if (key == tree->key) // 일치하는 값을 찾았을 경우, 해당 노드에 대한 포인터를 반환
+			return tree;
+		if (key < tree->key) // 키 값을 찾아가는 과정_ 찾고자 하는 값이 현위치의 값보다 작으면
+			tree = tree->left; // tree포인터를 왼쪽으로 이동하여 재정의
+		else // 찾고자 하는 값이 현위치의 값보다 크면
+			tree = tree->right; // tree포인터를 오른쪽으로 이동하여 재정의
+	}
+	return NULL; // 원하는 값을 찾지 못했으면 널값을 반환
 
 }
 
