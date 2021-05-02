@@ -285,6 +285,16 @@ Node* searchIterative(Node* head, int key) // iterative 탐색 방법
 
 int freeBST(Node* head)
 {
+	Node* p = head->left;
+
+	if (p != NULL)
+	{
+		freeBST(p->left);
+		freeBST(p->right);
+		free(p);
+	}
+	else
+		return 0;
 
 }
 
