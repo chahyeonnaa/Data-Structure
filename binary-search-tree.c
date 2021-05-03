@@ -285,12 +285,12 @@ Node* searchIterative(Node* head, int key) // iterative 탐색 방법
 
 int freeBST(Node* head)
 {
-	Node* p = head->left;
+	Node* p = head->left; // 루트 노드를 가리키는 포인터
 
-	if (p != NULL)
+	if (p != NULL) // 아무것도 가리키지 않을 때까지
 	{
-		freeBST(p->left);
-		freeBST(p->right);
+		freeBST(p->left); // 왼쪽 메모리해제
+		freeBST(p->right); // 오른쪽 메모리해제
 		free(p);
 	}
 	else
