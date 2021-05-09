@@ -228,7 +228,133 @@ int insert(Node* head, int key)
 
 int deleteNode(Node* head, int key)
 {
+	Node* parent = NULL; // 삭제하고자 하는 노드의 부모 노드를 가리킬 포인터
+	Node* child = head->left; // 루트노드를 가리키는 포인터
+
+	Node* temp;
+	Node* namu;
+	Node* x; // 삭제하고자 하는 노드의 위치를 기억하는 포인터
+
+	while (1) // key값 찾기
+	{
+		parent = child; // 찾고자 하는 노드의 부모 노드
+		if (child->key > key) // 찾고자 하는 노드가 해당 위치의 노드보다 작으면
+		{
+			child = child->left; // child값을 재정의하여 반복문을 다시 실행_ 왼쪽 탐색
+		}
+		else if (child->key < key) // 찾고자 하는 노드가 해당 위치의 노드보다 크면
+		{
+			child = child->right; // child값을 재정의하여 반복문을 다시 실행_ 오른쪽 탐색
+		}
+
+		if (child->key == key || (child->right == NULL && child->left == NULL))
+			break; // 값을 찾았거나, 찾고자 하는 값이 없어서 트리의 끝에 도달했을 경우 반복문 탈출
+	}
+
+	if (child->key != key && child->right == NULL && child->left == NULL) // 키 값이 일치하지 않고, 트리의 끝에 도달했으면
+	{
+		printf("the node [%d] is not exist", key); // 키 값이 존재하지 않는다는 문구 출력
+		return 1;
+	}
+
+	if (child->left != NULL && child->right != NULL) // 두개의 자식을 가지는경우
+	{
+		x = child; // 삭제하고자 하는 노드의 위치를 기억
+
+		child = child->right; // 오른쪽 트리에서 가장 작은 값을 찾아서 그걸로 대체해야하기 때문에
+							  // 오른쪽 트리를 탐색  
+		while (1)
+		{
+			namu = child; // 오른쪽 트리의 루트 노드 위치를 기억
+			if (child->left == NULL) // 오른쪽 트리에서 루트노드가 유일하거나, 루트노드의 왼쪽이 비어있을때
+				break; // 탈출
+
+			child = child->left; // 가장 작은 값을 찾아야하기때문에 왼쪽 노드를 계속 탐색
+
+			if (child->left == NULL) // 오른쪽 트리의 가장 마지막 왼쪽 노드라면
+			{
+				namu->left = NULL; // 이 값이 대체노드로 올라가기 때문에, 해당 노드의 부모가 널값을 가리키게 해야함.
+				break; // 탈출
+			}
+		}
+
+		if (x->key > parent->key) //삭제하고자 하는 값이 바로 상위노드보다 크면,
+		{
+			parent->right = child; // 부모의 오른쪽과 대체 노드를 연결
+		}
+		else if (x->key < parent->key) //삭제하고자 하는 값이 바로 상위노드보다 작으면,
+		{
+			parent->left = child; // 부모의 오른쪽과 대체노드를 연결
+		}
+
+
+		if (x->left == NULL) // 삭제하고자 하는 노드의 왼쪽 노드가 없다면,
+		{
+			child->left = NULL; // 대체 노드의 왼쪽도 없어야함.
+		}
+
+		else if (x->left != NULL)// 삭제하고자 하는 노드의 왼쪽 노드가 존재한다면,
+		{
+			child->left = x->left; // 원래 가리키던 값으로 대체
+		}
+
+
+		if (x->right == child) // 삭제 하고자 하는 노드의 바로 오른쪽이 대체노드라면,
+		{
+			if (namu->right == NULL) // 대체노드의 오른쪽이 널 값이라면, 
+				child->right = NULL; // 대체노드의 오른쪽은 널값.
+			else // 대체노드의 오른쪽에 데이터가 있다면, 
+				child->right = namu->right; // 연결시켜야함
+		}
+		else if (x->right != NULL)// 삭제하고자 하는 노드의 오른쪽 노드가 존재한다면,
+		{
+			child->right = x->right; // 원래 가리키던 값으로 대체
+
+		}
+		free(x);
+		return 1;
+
+	}
+	else if (child->left != NULL || child->right != NULL) // 하나의 자식을 가지는경우
+	{
+		if (child->left == NULL) // 삭제하고자 하는 왼쪽노드가 비어있다면, 
+			temp = child->right; // 포인터가 오른쪽 노드를 기억.
+		else // 삭제하고자 하는 노드의 오른쪽이 비어있다면, 
+			temp = child->left; // 포인터가 왼쪽 노드를 기억.
+
+		if (child->key > parent->key) //삭제하고자 하는 값이 바로 상위노드보다 크면,
+		{
+			parent->right = temp; // 상위노드의 오른쪽이 temp를 가리킴.
+			free(child); // 메모리 공간 해제
+			return 1;
+		}
+		else if (child->key < parent->key) //식제하고자 하는 값이 바로 상위노드보다 작으면,
+		{
+			parent->left = temp; // 상위노드의 왼쪽이 temp를 가리킴.
+			free(child); // 메모리 공간 해제
+			return 1;
+		}
+
+	}
+
+	else if (child->key == key && child->left==NULL && child->right == NULL) // 키 값을 찾았고, left와 right값이 NULL일때(리프노드 일때)
+	{
+		if (parent->key < child->key) // 부모 데이터보다 큰 경우
+		{
+			parent->right = NULL; // 오른쪽에 있는 노드를 버림
+			free(child);
+			return 1;
+		}
+		else // 부모 데이터보다 작은 경우
+		{
+			parent->left = NULL; // 왼쪽에 있는 노드를 버림
+			free(child);
+			return 1;
+		}
+	}
+
 	return 0;
+
 }
 
 
