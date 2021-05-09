@@ -231,8 +231,8 @@ int deleteNode(Node* head, int key)
 	Node* parent = NULL; // 삭제하고자 하는 노드의 부모 노드를 가리킬 포인터
 	Node* child = head->left; // 루트노드를 가리키는 포인터
 
-	Node* temp;
-	Node* namu;
+	Node* temp; // 하나의 자식을 가지는 경우에 쓰임
+	Node* namu; // 두개의 자식을 가지는 경우에 쓰임
 	Node* x; // 삭제하고자 하는 노드의 위치를 기억하는 포인터
 
 	while (1) // key값 찾기
