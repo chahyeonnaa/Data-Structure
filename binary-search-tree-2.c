@@ -141,42 +141,43 @@ void recursiveInorder(Node* ptr)
 /**
  * textbook: p 224s
  */
-void iterativeInorder(Node* node)
+void iterativeInorder(Node* node) // 중위순회를 위한 비순환 방식
 {
 	top = -1;
 	for (;;) {
 		for (; node; node = node->left)
-			push(node);
-		node = pop();
+			push(node); // 노드가 널이 아니면, 스택에 노드를 push
 
-		if (!node)
-			break;
+		node = pop(); // 스택의 탑에 있던 데이터를 pop
 
-		printf(" [%d] ", node->key);
-		node = node->right;
+		if (!node) // node가 널값이면_ 공백스택이면
+			break; // 반복문 탈출
+
+		printf(" [%d] ", node->key); // 노드 값 출력
+		node = node->right; // 노드를 바꾸어 재탐색
 	}
 }
 
 /**
  * textbook: p 225
  */
-void levelOrder(Node* ptr)
+void levelOrder(Node* ptr) // 처음부터 levelorder 방식으로 데이터를 읽어나가는 함수
 {
-	if (!ptr) return;
+	if (!ptr) return; // 공백트리라면 return
 
-	enQueue(ptr);
+	enQueue(ptr); // 루트노드 값을 큐에 삽입
 
 	for (;;) {
-		ptr = deQueue();
-		if (ptr)
+		ptr = deQueue(); // 큐에서 pop
+		if (ptr) // ptr이 널값이 아니면
 		{
-			printf(" [%d] ", ptr->key);
-			if (ptr->left)
-				enQueue(ptr->left);
-			if (ptr->right)
-				enQueue(ptr->right);
+			printf(" [%d] ", ptr->key); // ptr 데이터값 출력
+			if (ptr->left) // ptr->left의 값이 널이 아니면
+				enQueue(ptr->left); // 큐에 해당 데이터 삽입
+			if (ptr->right) // ptr->right의 값이 널이 아니면
+				enQueue(ptr->right); // 큐에 해당 데이터 삽입
 		}
-		else 
+		else // ptr이 더이상 아무것도 가리키지 않으면 반복문 탈출
 			break;
 	}
 }
@@ -242,7 +243,6 @@ void freeNode(Node* ptr)
 
 int freeBST(Node* head)
 {
-
 	if (head->left == head)
 	{
 		free(head);
@@ -259,48 +259,47 @@ int freeBST(Node* head)
 
 
 
-Node* pop()
+Node* pop() // iterativeInorder방식에서 사용
 {
-	if (top == -1)
+	if (top == -1) // 스택이 비어있다는 뜻
 	{
 		return 0;
 	}
 	else
-		return stack[top--];
+		return stack[top--]; // top 이동
 }
 
-void push(Node* aNode)
+void push(Node* aNode) // iterativeInorder방식에서 사용
 {
-	if (top >= MAX_STACK_SIZE - 1)
+	if (top >= MAX_STACK_SIZE - 1) // 스택이 가득차서 자리가 없으면
 		return;
 	else
-		stack[++top]= aNode;
-
+		stack[++top] = aNode; // top을 이동시키고 데이터 삽입.
 }
 
 
 
-Node* deQueue()
+Node* deQueue() //levelorder 방식에서 사용
 {
-	if (front == rear)
+	if (front == rear) // 큐의 공백조건_삭제할 데이터가 없음
 	{
-		return 0;
+		return 0; 
 	}
 	else
 	{
-		front = (front + 1) % MAX_QUEUE_SIZE;
+		front = (front + 1) % MAX_QUEUE_SIZE; //front 이동
 		return queue[front];
 	}
 
 }
 
-void enQueue(Node* aNode)
+void enQueue(Node* aNode) //levelorder 방식에서 사용
 {
-	if ((rear + 1) % MAX_QUEUE_SIZE == front)
-		return;
-	else
+	if ((rear + 1) % MAX_QUEUE_SIZE == front) // rear의 다음 데이터와 front의 값이 일치하면, 큐가 가득찼다는 것 
+		return; // queue full
+	else //그렇지않으면
 	{
-		rear = (rear + 1) % MAX_QUEUE_SIZE;
-		queue[rear] = aNode;
+		rear = (rear + 1) % MAX_QUEUE_SIZE; // rear 이동
+		queue[rear] = aNode; // 이동한 위치에 데이터 삽입
 	}
 }
