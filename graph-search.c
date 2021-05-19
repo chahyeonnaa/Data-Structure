@@ -14,11 +14,20 @@ typedef struct graph {
 	int iden[MAX_VERTEX];
 }graph;
 
+listNode* queue[MAX_VERTEX];
+listNode* deQueue();
+void enQueue(listNode* aNode);
+int front = NULL;
+int rear = NULL;
+
 graph* Initialize(graph* h);
 void InsertVertex(graph* h, int key);
 void InsetEdge(graph* h, int connect1, int connect2);
 void printgraph(graph* h);
 void dfs(graph* h, int key);
+void bfs(graph* h, int key);
+void freegraph(graph* h);
+
 int visited[MAX_VERTEX];
 
 int main()
@@ -54,7 +63,7 @@ int main()
 		case 'd': case 'D':
 			printf("Your Key(0~9) :");
 			scanf("%d", &key);
-			dfs(h,key);
+			dfs(h, key);
 			for (int i = 0; i < MAX_VERTEX; i++)
 			{
 				visited[i] = FALSE;
@@ -69,9 +78,18 @@ int main()
 			InsetEdge(h, connect1, connect2);
 			break;
 		case 'b': case 'B':
-
+			printf("Your Key(0~9) :");
+			scanf("%d", &key);
+			bfs(h, key);
+			for (int i = 0; i < MAX_VERTEX; i++)
+			{
+				visited[i] = FALSE;
+			}
+			front = NULL;
+			rear = NULL;
 			break;
 		case 'q': case 'Q':
+			freegraph(h);
 			break;
 		default:
 			printf("\n       >>>>>   Concentration!!   <<<<<     \n");
@@ -217,7 +235,7 @@ void printgraph(graph* h)
 
 }
 
-void dfs(graph* h,int key)
+void dfs(graph* h, int key)
 {
 
 	if (h->iden[key] != 1)
@@ -234,8 +252,79 @@ void dfs(graph* h,int key)
 
 	for (p = h->list[key]; p; p = p->link)
 	{
-		if ((visited[p->key])!=TRUE)
+		if ((visited[p->key]) != TRUE)
 			dfs(h, p->key);
+	}
+	front = rear = NULL;
+}
+
+void bfs(graph* h, int key)
+{
+	if (h->iden[key] != 1)
+	{
+		printf("vertex is not exist\n");
+		return;
+	}
+
+	listNode* ptr = NULL;
+
+	printf("%5d", key);
+	visited[key] = TRUE;
+
+	enQueue(key);
+
+	while (front!=rear)
+	{
+		key = deQueue();
+		for (ptr = h->list[key]; ptr; ptr = ptr->link)
+			if (!(visited[ptr->key]))
+			{
+				printf("%5d", ptr->key);
+				enQueue(ptr->key);
+				visited[ptr->key] = TRUE;
+			}
+	}
+
+	return;
+}
+
+listNode* deQueue()
+{
+	if (front == rear) 
+	{
+		printf("\nQueue is empty!\n" );
+		return NULL;
+	}
+
+	front = (front + 1) % MAX_VERTEX;
+	return queue[front];
+
+}
+
+void enQueue(listNode* aNode)
+{
+	rear = (rear + 1) % MAX_VERTEX;
+	if (front == rear) {
+		 printf("Queue is full\n");
+		return;
+	}
+
+	queue[rear] = aNode;
+}
+
+void freegraph(graph* h)
+{
+	listNode* k = NULL;
+	listNode* prev = NULL;
+	for (int i = 0; i < MAX_VERTEX; i++)
+	{
+		k = h->list[i];
+		while (k != NULL)
+		{
+			prev = k;
+			k = k->link;
+			free(prev);
+		}
 	}
 }
 
