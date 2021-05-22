@@ -39,6 +39,7 @@ int main()
 
 	do {
 		printf("\n");
+		printf("[2020039009 Chahyeona]\n");
 		printf("----------------------------------------------------------------\n");
 		printf("                          Graph Searches                        \n");
 		printf("----------------------------------------------------------------\n");
@@ -215,7 +216,7 @@ void printgraph(graph* h)
 	{
 		if (h->iden[i] == 1)
 		{
-			printf("정점 %d의 인접리스트 : ", i);
+			printf("Adjacent list of %d vertices : ", i);
 			if (h->list[i] == NULL)
 			{
 				printf("\n");
@@ -273,7 +274,7 @@ void bfs(graph* h, int key)
 
 	enQueue(key);
 
-	while (front!=rear)
+	while (front != rear)
 	{
 		key = deQueue();
 		for (ptr = h->list[key]; ptr; ptr = ptr->link)
@@ -290,9 +291,9 @@ void bfs(graph* h, int key)
 
 listNode* deQueue()
 {
-	if (front == rear) 
+	if (front == rear)
 	{
-		printf("\nQueue is empty!\n" );
+		printf("\nQueue is empty!\n");
 		return NULL;
 	}
 
@@ -305,7 +306,7 @@ void enQueue(listNode* aNode)
 {
 	rear = (rear + 1) % MAX_VERTEX;
 	if (front == rear) {
-		 printf("Queue is full\n");
+		printf("Queue is full\n");
 		return;
 	}
 
@@ -327,6 +328,10 @@ void freegraph(graph* h)
 		}
 	}
 }
+
+
+
+
 
 
 
