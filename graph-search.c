@@ -135,6 +135,18 @@ void InsetEdge(graph* h, int connect1, int connect2) // 간선 연결
 {
 	listNode* trail = NULL;
 	listNode* trail2 = NULL;
+	listNode* a = h->list[connect2];
+
+	while (a != NULL) // 이미 연결되어있는 vertex인지 확인
+	{
+		if (a->key == connect1) // 인접리스트를 뒤져서 해당 key가 발견되면,
+		{
+			printf("already connected\n"); // 이미 연결되었다는 메세지 출력
+			return;
+			break;
+		}
+		a = a->link;
+	}
 
 	if (h->iden[connect1] != 1 || h->iden[connect2] != 1) // vertex가 존재하는지 우선 확인
 	{
