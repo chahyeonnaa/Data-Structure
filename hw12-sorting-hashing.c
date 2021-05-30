@@ -325,7 +325,7 @@ int hashCode(int key) { // 제산함수 사용
 	return key % MAX_HASH_TABLE_SIZE;
 }
 
-int hashing(int* a, int** ht) // 해싱
+int hashing(int* a, int** ht) // 해싱_ 배열에 대한 해시테이블 만들기
 {
 	int* hashtable = NULL;
 
@@ -378,7 +378,7 @@ int hashing(int* a, int** ht) // 해싱
 	return 0;
 }
 
-int search(int* ht, int key)
+int search(int* ht, int key) // 해시테이블에서 key찾기
 {
 	int index = hashCode(key); // 전달받은 key값의 hashtable 주소 찾기
 
@@ -389,6 +389,6 @@ int search(int* ht, int key)
 	{
 		index = index % MAX_HASH_TABLE_SIZE; //index 조정
 	}
-	return index;
+	return index; // 해당 hashcode 값 리턴
 }
 
